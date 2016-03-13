@@ -32,11 +32,13 @@ define Image/boot-imgs
 
 	# create FIT image with rootfs
 	./mkits.sh \
-		-D $(DEVICE_LC) -o $(KDIR)/fit-$(DEVICE_LC).its -k $(KDIR)/zImage \
-		-d $(BIN_DIR)/$(IMG_PREFIX)-system.dtb \
+		-D $(DEVICE_LC) -o $(KDIR)/fit-$(DEVICE_LC).its -A $(ARCH) \
+		-v $(LINUX_VERSION) \
+		-k $(KDIR)/zImage \
 		-C none -a $(KERNEL_LOADADDR) -e $(KERNEL_ENTRY_POINT) \
-		-A $(ARCH) -v $(LINUX_VERSION) \
-		-r $(BIN_DIR)/$(IMG_PREFIX)-rootfs.cpio.gz -z gzip
+		-d $(BIN_DIR)/$(IMG_PREFIX)-system.dtb \
+		-r $(BIN_DIR)/$(IMG_PREFIX)-rootfs.cpio.gz \
+		-C gzip
 	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f $(KDIR)/fit-$(DEVICE_LC).its $(KDIR)/fit-$(DEVICE_LC).itb
 	$(CP) $(KDIR)/fit-$(DEVICE_LC).itb $(BIN_DIR)/$(IMG_PREFIX)-fit.itb
 	ln -fs $(IMG_PREFIX)-fit.itb $(BIN_DIR)/fit.itb
